@@ -30,7 +30,7 @@ app.engine(
 app.set("view engine", "handlebars");
 
 // Routes
-require("./routes/apiRoutes")(app);
+require("./routes/apiRoutes")(app, passport);
 require("./routes/htmlRoutes")(app);
 
 var syncOptions = { force: false };
@@ -78,6 +78,24 @@ function(accessToken, refreshToken, data, cb) {
     return cb(err, null);
   });
 }));
+
+// when we save a user to a session
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+// when we retrieve the data from a user session
+passport.deserializeUser(function(id, done) {
+  db.User.findOne({ where: {id: id }})
+  .then(function (user) {
+      done(null, user);
+  })
+  .catch(error => {
+      console.log(error);
+      done(error, false);
+  })
+  ;
+});
 
 // Starting the server, syncing our models ------------------------------------/
 db.sequelize.sync(syncOptions).then(function() {

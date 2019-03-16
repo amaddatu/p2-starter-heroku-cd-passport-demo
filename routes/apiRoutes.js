@@ -1,6 +1,6 @@
 var db = require("../models");
 
-module.exports = function(app) {
+module.exports = function(app, passport) {
   // Get all examples
   app.get("/api/examples", function(req, res) {
     db.Example.findAll({}).then(function(dbExamples) {
@@ -24,5 +24,13 @@ module.exports = function(app) {
     });
   });
 
-  
+  app.get('/_auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] }));
+ 
+  app.get('/_auth/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
 };
