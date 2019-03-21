@@ -11,7 +11,9 @@ module.exports = function(sequelize, DataTypes) {
         allowNull: false
       }
     });
+
+    // Order.belongsToMany(models.Product, { as: "Items", through: "orderproducts", foreignKey: "OrderId"});
   }
-  Order.sync();
+  
   return Order;
 };
