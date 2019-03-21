@@ -4,7 +4,8 @@ module.exports = function(sequelize, DataTypes) {
       google_id: DataTypes.STRING,
       facebook_id: DataTypes.STRING,
       email: DataTypes.STRING,
-      password: DataTypes.STRING
+      password: DataTypes.STRING,
+      admin: DataTypes.BOOLEAN
     });
 
     User.associate = function(models) {
