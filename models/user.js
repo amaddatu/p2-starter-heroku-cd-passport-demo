@@ -6,6 +6,13 @@ module.exports = function(sequelize, DataTypes) {
       email: DataTypes.STRING,
       password: DataTypes.STRING
     });
+
+    User.associate = function(models) {
+      // a user can have many orders
+      User.hasMany(models.Order, {
+        
+      });
+    };
     return User;
   };
   
