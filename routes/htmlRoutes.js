@@ -43,9 +43,9 @@ module.exports = function(app) {
   });
   // Manager can create products here
   app.get("/product-form", isAdmin, function(req, res) {
-      res.render("product-form", {
-        jsScripts: "<script src='/js/product.js'></script>"
-      });
+    res.render("product-form", {
+      jsScripts: "<script src='/js/product.js'></script>"
+    });
   });
 
   app.get("/account-order", isLoggedIn, function(req, res) {
@@ -69,6 +69,32 @@ module.exports = function(app) {
     
   });
 
+  app.get("/list-orders", isAdmin, function(req, res){
+    db.Order.findAll({
+      order: [
+        ['id', 'DESC']
+      ],
+      include: [{
+        model: db.Product,
+        as: 'Items',
+        through: {
+          attributes: ['price', 'quantity']
+        }
+      }]
+    })
+    .then( orders => {
+      console.log(JSON.stringify(orders, null, 2));
+      res.render("list-orders", {
+        title: "List Orders",
+        jsScripts: "<script src='/js/order.js'></script>",
+        orders: orders
+      });
+    })
+    .catch( error => {
+      console.log(error);
+      res.json(error.msg);
+    });
+  });
 
   function isLoggedIn(req, res, next) {
     // if user is authenticated, we'll all float on OK
