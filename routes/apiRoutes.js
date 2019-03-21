@@ -71,18 +71,26 @@ module.exports = function(app, passport) {
     var itemId = items[index].itemId;
     var quantity = items[index].quantity;
     if(quantity > 0){
-      db.OrderProduct.create({
-        ProductId: itemId,
-        OrderId: orderId
-      })
-      .then( dbProductOrder => {
+      db.Product.findOne({
+        where: {
+          id: itemId
+        }
+      }).then( dbProduct => {
+        var price = dbProduct.dataValues.price;
+        console.log(dbProduct.dataValues);
+        return db.OrderProduct.create({
+          ProductId: itemId,
+          OrderId: orderId,
+          quantity: quantity,
+          price: price
+        });
+      }).then( dbProductOrder => {
         console.log(dbProductOrder.dataValues);
         // add 1 to index
         index++;
         // recursive call will go to the next item in the list
         addProductToOrderHelper(items, index, orderId, cb);
-      })
-      .catch( err => {
+      }).catch( error => {
         console.log("err");
         // add 1 to index
         index++;
