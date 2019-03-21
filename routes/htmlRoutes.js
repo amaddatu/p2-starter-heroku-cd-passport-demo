@@ -28,12 +28,40 @@ module.exports = function(app) {
     });
   });
 
-  // Load example page and pass in an example by id
+  // Customer can create orders here
   app.get("/order-form", function(req, res) {
       res.render("order-form", {
         jsScripts: "<script src='/js/order.js'></script>"
       });
   });
+
+  app.get("/account-order", isLoggedIn, function(req, res) {
+    var user_id = req.user.dataValues.id;
+    db.Order.findAll({
+      UserId: user_id
+    }).then( orders => {
+      res.render("account-order", {
+        user: {
+          id: user_id
+        },
+        orders: orders,
+        jsScripts: "<script src='/js/order.js'></script>"
+      });
+    }).catch( err => {
+      console.log(err);
+      res.json(false);
+    })
+    
+  });
+
+  function isLoggedIn(req, res, next) {
+    // if user is authenticated, we'll all float on OK
+    if (req.isAuthenticated()) {
+      return next();
+    }
+    // otherwise, redirect them to the login page
+    res.redirect('/');
+  }
 
   // Render 404 page for any unmatched routes
   app.get("*", function(req, res) {
