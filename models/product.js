@@ -13,7 +13,7 @@ module.exports = function(sequelize, DataTypes) {
     //     allowNull: false
     //   }
     // });
-    // Product.belongsToMany(models.Order, { as: "Orders", through: "OrderProduct", foreignKey: "ProductId"});
+    Product.belongsToMany(models.Order, { as: "Orders", through: "OrderProduct", foreignKey: "ProductId"});
   }
   
   return Product;
