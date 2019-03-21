@@ -51,5 +51,43 @@ module.exports = function(app, passport) {
     }
   });
 
+  // Create a new order
+  app.post("/api/product",
+  function(req, res) {
+    if(typeof req.user !== 'undefined'){
+      // email = req.user.dataValues.email;
+      console.log(req.user.dataValues);
+      var orderData = req.body;
+      orderData.UserId = req.user.dataValues.id;
+      db.Order.create(orderData).then(function(dbOrder) {
+        res.json(true);
+      });
+    }
+    else{
+      res.json(false);
+    }
+  });
+
   
+  // this is NOT SECURE ... remove in production
+  app.get("/_api/account-make-admin", isLoggedIn, function(req, res){
+    if(process.env.NODE_ENV === 'development'){
+      var user_id = req.user.dataValues.id;
+      db.User.update({
+        admin: true
+      }, {
+        where: {
+          id: user_id
+        }
+      }).then((result) => {
+        res.redirect('/');
+      }).catch((err) => {
+        console.log(err);
+        res.json(false);
+      });
+    }
+    else{
+      res.json(false);
+    }
+  });
 };
