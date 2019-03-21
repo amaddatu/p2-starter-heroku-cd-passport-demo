@@ -53,19 +53,12 @@ module.exports = function(app, passport) {
 
   // Create a new order
   app.post("/api/product",
+  isAdmin,
   function(req, res) {
-    if(typeof req.user !== 'undefined'){
-      // email = req.user.dataValues.email;
-      console.log(req.user.dataValues);
-      var orderData = req.body;
-      orderData.UserId = req.user.dataValues.id;
-      db.Order.create(orderData).then(function(dbOrder) {
-        res.json(true);
-      });
-    }
-    else{
-      res.json(false);
-    }
+    // email = req.user.dataValues.email;
+    console.log(req.user.dataValues);
+    console.log(req.body);
+    res.json(req.body);
   });
 
   
@@ -97,6 +90,15 @@ module.exports = function(app, passport) {
       return next();
     }
     // otherwise, redirect them to the login page
-    res.redirect('/');
+    res.end('error');
+  }
+
+  function isAdmin(req, res, next) {
+    // if user is authenticated, we'll all float on OK
+    if (req.isAuthenticated() && req.user.dataValues.admin) {
+      return next();
+    }
+    // otherwise, redirect them to the login page
+    res.end('error');
   }
 };

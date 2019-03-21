@@ -29,9 +29,15 @@ module.exports = function(app) {
   });
 
   // Customer can create orders here
-  app.get("/order-form", function(req, res) {
+  app.get("/order-form", isLoggedIn, function(req, res) {
       res.render("order-form", {
         jsScripts: "<script src='/js/order.js'></script>"
+      });
+  });
+  // Manager can create products here
+  app.get("/product-form", isAdmin, function(req, res) {
+      res.render("product-form", {
+        jsScripts: "<script src='/js/product.js'></script>"
       });
   });
 
@@ -58,6 +64,16 @@ module.exports = function(app) {
   function isLoggedIn(req, res, next) {
     // if user is authenticated, we'll all float on OK
     if (req.isAuthenticated()) {
+      return next();
+    }
+    // otherwise, redirect them to the login page
+    res.redirect('/');
+  }
+
+  function isAdmin(req, res, next) {
+    // if user is authenticated, we'll all float on OK
+    if (req.isAuthenticated() && req.user.dataValues.admin) {
+      console.log(req.user.dataValues);
       return next();
     }
     // otherwise, redirect them to the login page
