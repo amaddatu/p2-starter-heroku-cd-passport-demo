@@ -28,6 +28,13 @@ module.exports = function(app) {
     });
   });
 
+  // Load example page and pass in an example by id
+  app.get("/order-form", function(req, res) {
+      res.render("order-form", {
+        jsScripts: "<script src='/js/order.js'></script>"
+      });
+  });
+
   // Render 404 page for any unmatched routes
   app.get("*", function(req, res) {
     res.render("404");

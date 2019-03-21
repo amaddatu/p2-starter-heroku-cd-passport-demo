@@ -33,4 +33,21 @@ module.exports = function(app, passport) {
     // Successful authentication, redirect home.
     res.redirect('/');
   });
+
+  // Create a new order
+  app.post("/api/order",
+  function(req, res) {
+    if(typeof req.user !== 'undefined'){
+      // email = req.user.dataValues.email;
+      console.log(req.user.dataValues);
+      var orderData = req.body;
+      orderData.UserId = req.user.dataValues.id;
+      db.Order.create(orderData).then(function(dbOrder) {
+        res.json(true);
+      });
+    }
+    else{
+      res.json(false);
+    }
+  });
 };

@@ -12,5 +12,6 @@ module.exports = function(sequelize, DataTypes) {
       }
     });
   }
+  Order.sync();
   return Order;
 };
