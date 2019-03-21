@@ -51,7 +51,9 @@ module.exports = function(app) {
   app.get("/account-order", isLoggedIn, function(req, res) {
     var user_id = req.user.dataValues.id;
     db.Order.findAll({
-      UserId: user_id
+      where: {
+        UserId: user_id
+      }
     }).then( orders => {
       res.render("account-order", {
         user: {
@@ -63,7 +65,7 @@ module.exports = function(app) {
     }).catch( err => {
       console.log(err);
       res.json(false);
-    })
+    });
     
   });
 
