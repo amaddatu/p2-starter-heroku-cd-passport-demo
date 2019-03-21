@@ -90,4 +90,13 @@ module.exports = function(app, passport) {
       res.json(false);
     }
   });
+
+  function isLoggedIn(req, res, next) {
+    // if user is authenticated, we'll all float on OK
+    if (req.isAuthenticated()) {
+      return next();
+    }
+    // otherwise, redirect them to the login page
+    res.redirect('/');
+  }
 };

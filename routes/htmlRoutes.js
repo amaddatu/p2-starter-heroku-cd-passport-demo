@@ -54,22 +54,6 @@ module.exports = function(app) {
     
   });
 
-  // this is NOT SECURE ... remove in production
-  app.get("/account-make-admin", isLoggedIn, function(req, res){
-    var user_id = req.user.dataValues.id;
-    db.User.update({
-      admin: true
-    }, {
-      where: {
-        id: user_id
-      }
-    }).then((result) => {
-      res.json(true);
-    }).catch((err) => {
-      console.log(err);
-      res.json(false);
-    })
-  });
 
   function isLoggedIn(req, res, next) {
     // if user is authenticated, we'll all float on OK
