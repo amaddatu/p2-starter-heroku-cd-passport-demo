@@ -56,9 +56,17 @@ module.exports = function(app, passport) {
   isAdmin,
   function(req, res) {
     // email = req.user.dataValues.email;
-    console.log(req.user.dataValues);
-    console.log(req.body);
-    res.json(req.body);
+    // console.log(req.user.dataValues);
+    // console.log(req.body);
+    // res.json(req.body);
+    db.Product.create(req.body)
+    .then((result) => {
+      res.json(req.body);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.json(false);
+    });
   });
 
   

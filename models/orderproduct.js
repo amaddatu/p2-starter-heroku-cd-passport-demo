@@ -1,5 +1,7 @@
 module.exports = function(sequelize, DataTypes) {
   var OrderProduct = sequelize.define("OrderProduct", {
+    quantity: DataTypes.INTEGER,
+    price: DataTypes.DECIMAL(10, 2)
   });
 
   OrderProduct.associate = function(models) {
