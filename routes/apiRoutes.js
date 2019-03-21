@@ -42,15 +42,61 @@ module.exports = function(app, passport) {
       console.log(req.user.dataValues);
       var orderData = req.body;
       orderData.UserId = req.user.dataValues.id;
+      // console.log(orderData['product-id']);
+      // console.log(orderData['quantity']);
+      console.log(req.body);
+      // delete orderData['items'];
+      // delete orderData['product-id'];
+      // delete orderData['quantity'];
       db.Order.create(orderData).then(function(dbOrder) {
-        res.json(true);
+        console.log(dbOrder.dataValues);
+        addProductToOrderHelper(orderData['items'], 0, dbOrder.dataValues.id, function(){
+          res.json(true);
+        });
       });
+      
     }
     else{
       res.json(false);
     }
   });
 
+  // for (var i = 0; i < items.length; i++){
+
+  // }
+  function addProductToOrderHelper(items, index, orderId, cb){
+    if(index >= items.length){
+      return cb();
+    }
+    var itemId = items[index].itemId;
+    var quantity = items[index].quantity;
+    if(quantity > 0){
+      db.OrderProduct.create({
+        ProductId: itemId,
+        OrderId: orderId
+      })
+      .then( dbProductOrder => {
+        console.log(dbProductOrder.dataValues);
+        // add 1 to index
+        index++;
+        // recursive call will go to the next item in the list
+        addProductToOrderHelper(items, index, orderId, cb);
+      })
+      .catch( err => {
+        console.log("err");
+        // add 1 to index
+        index++;
+        // recursive call will go to the next item in the list
+        addProductToOrderHelper(items, index, orderId, cb);
+      });
+    }
+    else{
+      // add 1 to index
+      index++;
+      // recursive call will go to the next item in the list
+      addProductToOrderHelper(items, index, orderId, cb);
+    }
+  }
   // Create a new order
   app.post("/api/product",
   isAdmin,

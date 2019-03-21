@@ -30,9 +30,16 @@ module.exports = function(app) {
 
   // Customer can create orders here
   app.get("/order-form", isLoggedIn, function(req, res) {
+    db.Product.findAll({}).then( products => {
       res.render("order-form", {
-        jsScripts: "<script src='/js/order.js'></script>"
+        jsScripts: "<script src='/js/order.js'></script>",
+        products: products
       });
+    }).catch( err => {
+      console.log(err);
+      res.end(err.msg);
+    });
+    
   });
   // Manager can create products here
   app.get("/product-form", isAdmin, function(req, res) {
