@@ -1,2 +1,26 @@
-the file
-{{orders.length}}
+<h1>List of all orders</h1>
+<ul>
+{{#each orders}}
+    <li>
+        <ul>
+            <li>ORDER ID: {{this.id}}</li>
+            <li>DESCRIPTION: {{this.description}}</li>
+            <li>
+                <ul>
+                    {{#each this.Items}}
+                        <li>
+                            <ul>
+                                <li>ID: {{this.id}}</li>
+                                <li>NAME: {{this.name}}</li>
+                                <li>DESCRIPTION: {{this.description}}</li>
+                                <li>PRICE: {{this.OrderProduct.price}}</li>
+                                <li>QUANTITY: {{this.OrderProduct.quantity}}</li>
+                            </ul>
+                        </li>
+                    {{/each}}
+                </ul>
+            </li>
+        </ul>
+    </li>
+{{/each}}
+</ul>
